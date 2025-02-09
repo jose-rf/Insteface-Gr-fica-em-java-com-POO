@@ -46,6 +46,10 @@ public class Uf {
     public void setSigla(String sigla) {
         this.sigla = sigla;
     }
+
+    public Object trim() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     
     

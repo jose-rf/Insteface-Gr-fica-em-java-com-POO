@@ -139,6 +139,12 @@ public class JanelaCadastroFornecedor extends javax.swing.JInternalFrame {
             }
         });
 
+        txtTelefone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTelefoneActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -252,6 +258,51 @@ public class JanelaCadastroFornecedor extends javax.swing.JInternalFrame {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         // TODO add your handling code here:
+        if (Integer.parseInt(txtId.getText()) > 0) {
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente excluir esse registro?",
+                "Excluir?",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            int id = Integer.parseInt(txtId.getText());
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.setId(id);
+            FornecedorRepository fornecedorRepository = new FornecedorRepository();
+
+            boolean retornoBanco = fornecedorRepository.deletar(
+                    janelaPrincipal.conexaoMySQL.connection,
+                    fornecedor
+            );
+
+            if (retornoBanco) {
+                limparJanela();
+                txtId.setText("0");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Registro excluído com sucesso!",
+                        "Tela de cadastro de Fornecedor",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Erro ao excluir o registro!",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(
+                this,
+                "Nenhum registro selecionado para excluir.",
+                "Erro",
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
@@ -259,62 +310,54 @@ public class JanelaCadastroFornecedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
-        String cnpj = txtCNPJ.getText();
-        String inscricaoEstadual = txtInscricaoEstadual.getText();
-        String nomeFantasia = txtNomeFantasia.getText();
-        String nome = txtNome.getText();
-        String email = txtEmail.getText();
-        String endereco = "ENDERECO"; //CORRIGIR
-        String telefone = txtTelefone.getText();
-        String categoria = txtCategoria.getText();
-        String ufSelecionado = (String) selectUF.getSelectedItem();
-        int id = Integer.parseInt(txtId.getText());
+    String cnpj = txtCNPJ.getText();
+    String inscricaoEstadual = txtInscricaoEstadual.getText();
+    String nomeFantasia = txtNomeFantasia.getText();
+    String nome = txtNome.getText();
+    String email = txtEmail.getText();
+    String telefone = txtTelefone.getText();
+    String categoria = txtCategoria.getText();
+    String uf = (String) selectUF.getSelectedItem();
 
-        UfRepository ufRepository = new UfRepository();
-        List<Uf> listaDeUfs = ufRepository.listar(janelaPrincipal.conexaoMySQL.connection, "uf");
-        Uf ufEncontrado = listaDeUfs.stream()
-                .filter(uf -> uf.getNome().equals(ufSelecionado))
-                .findFirst()
-                .orElse(null);
+    // Validating required fields
+    if (cnpj.isEmpty() || nome.isEmpty() || email.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos obrigatórios.", "Validação", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        if (ufEncontrado == null) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "O UF selecionado é inválido!",
-                    "Erro",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            return;
+    // Creating a Fornecedor object
+    Fornecedor fornecedor = new Fornecedor();
+    fornecedor.setCnpj(cnpj);
+    fornecedor.setInscricaoEstadual(inscricaoEstadual);
+    fornecedor.setNomeFantasia(nomeFantasia);
+    fornecedor.setNome(nome);
+    fornecedor.setEmail(email);
+    fornecedor.setTelefone(telefone);
+    fornecedor.setCategoria(categoria);
+
+    FornecedorRepository fornecedorRepository = new FornecedorRepository();
+    boolean retornoBanco = false;
+
+    if (txtId.getText().isEmpty()) {
+        // Insert new supplier
+        retornoBanco = fornecedorRepository.inserir(janelaPrincipal.conexaoMySQL.connection, fornecedor);
+    } else {
+        try {
+            int id = Integer.parseInt(txtId.getText());
+            fornecedor.setId(id);
+            retornoBanco = fornecedorRepository.atualizar(janelaPrincipal.conexaoMySQL.connection, fornecedor);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID inválido, por favor insira um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
+    }
 
-        Fornecedor fornecedor = new Fornecedor(cnpj, inscricaoEstadual, nomeFantasia, nome, email, endereco, telefone,
-                categoria, ufEncontrado, id);
+    // Notify user of success or failure
+    if (retornoBanco) {
+        JOptionPane.showMessageDialog(this, "Fornecedor salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Erro ao salvar fornecedor.", "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 
-        FornecedorRepository fornecedorRepository = new FornecedorRepository();
-        boolean retornoBanco = false;
-
-        if (Integer.parseInt(txtId.getText()) == 0) {
-            //inserir
-            retornoBanco = fornecedorRepository.inserir(
-                    janelaPrincipal.conexaoMySQL.connection,
-                    fornecedor);
-        } else {
-            //atualizar
-            retornoBanco = fornecedorRepository.atualizar(
-                    janelaPrincipal.conexaoMySQL.connection,
-                    fornecedor);
-        }
-
-        if (retornoBanco) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Cadastro atualizado com sucesso!",
-                    "Tela de cadastro",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-            //limpar a janela
-            limparJanela();
-        }
     }//GEN-LAST:event_btnGravarActionPerformed
 
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
@@ -332,6 +375,10 @@ public class JanelaCadastroFornecedor extends javax.swing.JInternalFrame {
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
+
+    private void txtTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTelefoneActionPerformed
 
     private void limparJanela() {
         txtNome.setText("");

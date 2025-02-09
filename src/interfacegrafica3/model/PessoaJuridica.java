@@ -21,10 +21,6 @@ public class PessoaJuridica extends Pessoa {
         this.inscricaoEstadual = inscricaoEstadual;
         this.nomeFantasia = nomeFantasia;
     }
-    
-    public PessoaJuridica() {
-    super(); // Chama o construtor de Pessoa
-}
 
     public String getCnpj() {
         return cnpj;

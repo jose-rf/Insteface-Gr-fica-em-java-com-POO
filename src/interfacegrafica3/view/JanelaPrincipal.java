@@ -79,7 +79,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
         desktopPane.add(jB_fornecedor);
-        jB_fornecedor.setBounds(140, 280, 160, 50);
+        jB_fornecedor.setBounds(140, 320, 160, 50);
 
         jB_cadastro.setText("CADASTRO");
         jB_cadastro.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +88,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
         desktopPane.add(jB_cadastro);
-        jB_cadastro.setBounds(140, 140, 160, 50);
+        jB_cadastro.setBounds(140, 180, 160, 50);
 
         jB_cadastroUf.setText("CADASTRO UF");
         jB_cadastroUf.addActionListener(new java.awt.event.ActionListener() {
@@ -97,7 +97,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
         desktopPane.add(jB_cadastroUf);
-        jB_cadastroUf.setBounds(140, 210, 160, 50);
+        jB_cadastroUf.setBounds(140, 250, 160, 50);
 
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
 
@@ -186,6 +186,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -200,7 +205,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
         );
 
         pack();
@@ -360,6 +365,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jB_fornecedorActionPerformed
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     /**
      * @param args the command line arguments

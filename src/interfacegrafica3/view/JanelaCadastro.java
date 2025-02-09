@@ -89,6 +89,12 @@ public class JanelaCadastro extends javax.swing.JInternalFrame {
             }
         });
 
+        txtId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdActionPerformed(evt);
+            }
+        });
+
         bntDeletar.setText("Excluir");
         bntDeletar.setToolTipText("");
         bntDeletar.addActionListener(new java.awt.event.ActionListener() {
@@ -385,6 +391,10 @@ public class JanelaCadastro extends javax.swing.JInternalFrame {
             }            
         }
     }//GEN-LAST:event_bntDeletarActionPerformed
+
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdActionPerformed
     
     private void limparJanela(){
         txtNome.setText("");
